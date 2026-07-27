@@ -1,11 +1,11 @@
 // Files
-import Home from "./pages/Home.jsx";
+import Home from './pages/Home.jsx';
 
 const routes = [
-    {
-        path: "/",
-        element: <Home /> ,
-    },
-]
+  {
+    path: '/',
+    element: <Home />,
+  },
+];
 
 export default routes;

@@ -1,2 +1,16 @@
 :root {
+    /* Font */
+    font-family: sans-serif;
+    --font-size-s: 16px;
+    --font-size-m: 18px;
+    --font-size-l: 32px;
+
+    /* Colors */
+    --black: rgba(0, 0, 0, 0.9);
+    --white: rgb(255, 255, 255);
+    --yellow: rgb(210, 210, 10);
+
+    /* Borders */
+    --border: 1px solid var(--yellow);
+    --border-radius: 5px;
 }
