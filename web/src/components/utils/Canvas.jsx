@@ -17,6 +17,10 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
   });
   const [marks, setMarks] = useState([]);
   const [username, setUsername] = useState("");
+  
+  /** useEffect(() => {
+   * fetch ranking data
+  }) */
 
   const handleClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect(); // Get coordinates of canvas.
@@ -66,12 +70,16 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
     /*
     try {
         const response = await fetch("http://localhost:8080/api/register", {
-            method: "POST",
-            headers: {
+          method: "POST",
+          headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({username})
         })
+
+        const result = response.json();
+
+        console.log(result);
     } catch (err) {
         console.error(err);
     }

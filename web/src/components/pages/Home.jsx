@@ -28,6 +28,7 @@ const Home = () => {
 
   useEffect(() => {
     if (characters.length > 0 && characters.every((char) => char.found)) {
+      // eslint-disable-next-line
       setIsGameOver(true);
     }
   }, [characters]);
