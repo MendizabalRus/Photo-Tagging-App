@@ -142,7 +142,7 @@ console.log(click)
       )}
       {marks.map((mark) => {
         return (
-            <div key={[mark.centerX, mark.centerY]} style={{position: 'absolute', top: `${mark[1]}px`, left: `${mark[0]}px`}} className={s.crosshair}></div>
+            <div key={[mark[1], mark[0]]} style={{position: 'absolute', top: `${mark[1]}px`, left: `${mark[0]}px`}} className={s.crosshair}></div>
         )
       })}
       <img src={scenario} alt="Scenario" className={s.scenario} />

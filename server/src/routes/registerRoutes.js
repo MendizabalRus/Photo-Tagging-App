@@ -1,8 +1,8 @@
 // Packages
-import { Router } from "express"
+import { Router } from "express";
 
 // Files
-import { postRegister } from "./registerRoutes.js"
+import { postRegister } from "../controllers/registerControllers.js";
 
 const registerRoutes = Router();
 

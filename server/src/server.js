@@ -5,9 +5,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Files
-import authRoutes from "./routes/authRoutes.js";
 import guessRoutes from "./routes/guessRoutes.js"
 import charactersRoutes from "./routes/charactersRoutes.js"
+import registerRoutes from "./routes/registerRoutes.js";
 
 const app = express(); // Declare server
 
@@ -28,11 +28,11 @@ app.use(
 app.use("/images", express.static("public/assets"));
 
 // Route handlers:
-app.use("/api/auth", authRoutes) // Authentication routes.
-
 app.use("/api/guess", guessRoutes) // Guess routes.
 
 app.use("/api/characters", charactersRoutes) // Characters routes.
+
+app.use("/api/register", registerRoutes) // Register routes.
 
 // Start server
 app.listen(8080, (err) => {
