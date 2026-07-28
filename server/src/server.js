@@ -6,6 +6,8 @@ dotenv.config();
 
 // Files
 import authRoutes from "./routes/authRoutes.js";
+import guessRoutes from "./routes/guessRoutes.js"
+import charactersRoutes from "./routes/charactersRoutes.js"
 
 const app = express(); // Declare server
 
@@ -17,14 +19,18 @@ app.use(express.json()); // Allow content to be sent in JSON format to the serve
 app.use(
   cors({
     origin: [
-      "<web_url>"
+      "http://localhost:5173"
     ],
     credentials: true,
   }),
 );
 
 // Route handlers:
-app.use("/api/auth", authRoutes) // Authentication routes
+app.use("/api/auth", authRoutes) // Authentication routes.
+
+app.use("/api/guess", guessRoutes) // Guess routes.
+
+app.use("/api/characters", charactersRoutes) // Characters routes.
 
 // Start server
 app.listen(8080, (err) => {
