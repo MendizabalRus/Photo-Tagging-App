@@ -33,8 +33,11 @@ export const postGuess = async (req, res) => {
     const minY = guessedCharacter.minY;
     const maxY = guessedCharacter.maxY;
 
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+
     if (minX <= x && maxX >= x && minY >= y && maxY <= y) {
-      return res.status(200).json(guessedCharacter.id);
+      return res.status(200).json({centerX, centerY, id: guessedCharacter.id});
     } else {
       return res.status(200).json(null);
     }

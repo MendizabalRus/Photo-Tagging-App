@@ -12,7 +12,7 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
+model User { // Should change to Ranking and time should be added as a string
   id       Int  @unique
   username String @unique
 }
