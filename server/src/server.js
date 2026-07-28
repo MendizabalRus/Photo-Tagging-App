@@ -25,6 +25,8 @@ app.use(
   }),
 );
 
+app.use("/images", express.static("public/assets"));
+
 // Route handlers:
 app.use("/api/auth", authRoutes) // Authentication routes.
 
