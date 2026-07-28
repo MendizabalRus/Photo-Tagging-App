@@ -15,6 +15,8 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
     x: null,
     y: null,
   });
+  const [marks, setMarks] = useState([]);
+  const [username, setUsername] = useState("");
 
   const handleClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect(); // Get coordinates of canvas.
@@ -43,11 +45,11 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
       });
 
       const result = await response.json();
-      console.log(result)
+      console.log(result.centerX, result.centerY)
+      console.log(result.id)
 
-      onCharacterFound(result);
-
-      // if found true, render permanent circle on coords
+      setMarks((prev) => [...prev, [result.centerX, result.centerY]])
+      onCharacterFound(result.id);
 
       setClick({
         showModal: false,
@@ -60,22 +62,40 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
     }
   };
 
-  console.log(click)
+  const handleSubmit = async () => {
+    /*
+    try {
+        const response = await fetch("http://localhost:8080/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({username})
+        })
+    } catch (err) {
+        console.error(err);
+    }
+    */
+  }
+
+console.log(marks)
+console.log(click)
 
   return (
     <section className={s.Canvas} onClick={(e) => handleClick(e)}>
       {isGameOver && (
-        <div className={s.gameOverModal}>
-          <div>
+        <div className={s.gameOverModal} onClick={(e) => e.stopPropagation()}>
+          <div className={s.register}>
             <h2>Register your score!</h2>
-            <form onSubmit={/*handleSubmit*/ null}>
+            <form onSubmit={handleSubmit}>
               <input
                 type="text"
-                onChange={/*(e) => setUsername(e.target.value)*/ null}
+                onChange={(e) => setUsername(e.target.value)}
               />
+              <button type='submit'>Register Score</button>
             </form>
           </div>
-          <div>
+          <div className={s.ranking}>
             <p>#1 00:00.000s username1</p>
             <p>#2 00:00.000s username2</p>
             <p>#3 00:00.000s username3</p>
@@ -112,6 +132,11 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
           </div>
         </div>
       )}
+      {marks.map((mark) => {
+        return (
+            <div key={[mark.centerX, mark.centerY]} style={{position: 'absolute', top: `${mark[1]}px`, left: `${mark[0]}px`}} className={s.crosshair}></div>
+        )
+      })}
       <img src={scenario} alt="Scenario" className={s.scenario} />
     </section>
   );

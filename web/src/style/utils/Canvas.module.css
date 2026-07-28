@@ -1,46 +1,80 @@
 .Canvas {
-    grid-row: 1/2;
-    grid-column: 1/4;
+  grid-row: 1/2;
+  grid-column: 1/4;
 
-    border: var(--border);
-    border-radius: var(--border-radius);
+  border: var(--border);
+  border-radius: var(--border-radius);
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .scenario {
-    display: block;
-    width: 100%;
-    height: auto;
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .guessModal {
-    width: 50px;
-    height: auto;
+  width: 50px;
+  height: auto;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
 }
 
 .crosshair {
-    height: 50px;
-    width: 50px;
+  height: 50px;
+  width: 50px;
 
-    border: 5px solid blue;
-    border-radius: 50%;
+  border: 5px solid blue;
+  border-radius: 50%;
 }
 
 .characters {
-    width: 90px;
-    height: auto;
+  width: 90px;
+  height: auto;
 
-    padding: 10px;
+  padding: 10px;
 
-    border: 1px solid rgba(0, 0, 0, 0.95);
-    border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 0, 0, 0.95);
+  border-radius: var(--border-radius);
 
-    background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
+}
 
+.gameOverModal {
+  position: absolute;
+
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+
+  padding: 20px;
+
+  background-color: var(--black);
+
+  color: white;
+}
+
+.register {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.register > form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ranking {
+  display: flex;
+  flex-direction: column;
+}
+
+.ranking > hr {
+  margin: 10px 0px;
 }

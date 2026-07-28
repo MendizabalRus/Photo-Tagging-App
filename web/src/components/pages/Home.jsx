@@ -40,8 +40,6 @@ const Home = () => {
     });
   };
 
-  console.log(characters)
-
   return (
     <div className={s.Home}>
       <Canvas
