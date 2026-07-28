@@ -1,14 +1,10 @@
-// Packages
-
 // Style
 import s from '../../style/utils/Character.module.css';
 
-// Files
-
-const Character = ({ name, img }) => {
+const Character = ({ name, onClick }) => {
   return (
-    <div className={s.Character}>
-      <img src={img} alt={name} />
+    <div onClick={onClick} className={s.Character}>
+      <img src={`http://localhost:8080/images/${name?.toLowerCase()}.png`} alt={name} />
     </div>
   );
 };

@@ -2,7 +2,9 @@
 import prisma from "../../lib/prisma.js";
 
 export const postGuess = async (req, res) => {
-  const { x, y, guessedCharacterId } = req.body;
+  const { x, y, id } = req.body;
+
+  console.log(req.body)
 
   try {
     if (!x || !y) {
@@ -10,14 +12,14 @@ export const postGuess = async (req, res) => {
       return res.status(400).json({ error: "Missing coordinates" });
     }
 
-    if (!guessedCharacterId) {
-      console.error("Character is not defined");
+    if (!id) {
+      console.error("Character id is not defined");
       return res.status(400).json({ error: "Missing character" });
     }
 
     const guessedCharacter = await prisma.character.findUnique({
       where: {
-        id: guessedCharacterId,
+        id: id,
       },
     });
 
@@ -32,9 +34,7 @@ export const postGuess = async (req, res) => {
     const maxY = guessedCharacter.maxY;
 
     if (minX <= x && maxX >= x && minY >= y && maxY <= y) {
-      return res
-        .staus(200)
-        .json(guessedCharacter.id);
+      return res.status(200).json(guessedCharacter.id);
     } else {
       return res.status(200).json(null);
     }

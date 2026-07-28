@@ -7,60 +7,91 @@ import s from '../../style/utils/Canvas.module.css';
 // Files
 import Character from './Character';
 
-import scenario from '../../assets/scenario.webp';
+import scenario from '../../public/assets/scenario.webp';
 
-const Canvas = ({ characters = [] }) => {
-  const [guessModal, setGuessModal] = useState({
-    show: false,
+const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
+  const [click, setClick] = useState({
+    showModal: false,
     x: null,
     y: null,
   });
 
-  const [click, setClick] = useState({ char: null, x: null, y: null });
-
   const handleClick = (e) => {
-    const rect = e.target.getBoundingClientRect(); // Get coordinates of canvas.
+    const rect = e.currentTarget.getBoundingClientRect(); // Get coordinates of canvas.
 
     const x = e.clientX - rect.left; // Get x coordinates relative to canvas.
 
     const y = e.clientY - rect.top; // Get y coordinates relative to canvas.
 
-    guessModal.show
-      ? setGuessModal({ show: false, x: null, y: null })
-      : setGuessModal({ show: true, x: x, y: y });
+    click.showModal
+      ? setClick({ showModal: false, x: null, y: null })
+      : setClick({ showModal: true, x: x, y: y });
   };
 
-  const handleCheck = async ({ char }) => {
-    setClick({ char: char });
-
-    /*
+  const handleGuess = async (charId) => {
     try {
-      const response = await fetch('http://localhost:8080/api/click', {
+      const response = await fetch('http://localhost:8080/api/guess', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(click),
+        body: JSON.stringify({
+          x: click.x,
+          y: click.y,
+          id: charId,
+        }),
       });
 
       const result = await response.json();
-      console.log(result);
+      console.log(result)
+
+      onCharacterFound(result);
+
+      setClick({
+        showModal: false,
+        x: null,
+        y: null,
+        guessedCharacterId: null,
+      });
     } catch (err) {
       console.error(err);
     }
-    */
   };
+
+  console.log(click)
 
   return (
     <section className={s.Canvas} onClick={(e) => handleClick(e)}>
-      {guessModal.show && (
+      {isGameOver && (
+        <div className={s.gameOverModal}>
+          <div>
+            <h2>Register your score!</h2>
+            <form onSubmit={/*handleSubmit*/ null}>
+              <input
+                type="text"
+                onChange={/*(e) => setUsername(e.target.value)*/ null}
+              />
+            </form>
+          </div>
+          <div>
+            <p>#1 00:00.000s username1</p>
+            <p>#2 00:00.000s username2</p>
+            <p>#3 00:00.000s username3</p>
+            <p>#4 00:00.000s username4</p>
+            <p>#5 00:00.000s username5</p>
+            <hr />
+            <p>#yourTime 00:00.000s you</p>
+          </div>
+        </div>
+      )}
+      {click.showModal && (
         <div
-          onClick={() => setGuessModal({ show: false })}
           style={{
             position: 'absolute',
-            top: guessModal.y + 3,
-            left: guessModal.x,
+            top: click.y + 3,
+            left: click.x,
           }}
+          onClick={(e) => e.stopPropagation()}
           className={s.guessModal}
         >
           <div className={s.crosshair}></div>
@@ -68,10 +99,10 @@ const Canvas = ({ characters = [] }) => {
             {characters.map((char) => {
               return (
                 <Character
-                  key={char.name}
+                  key={char.id}
                   name={char.name}
                   img={char.img}
-                  onClick={() => handleCheck(char.name)}
+                  onClick={() => handleGuess(char.id)}
                 />
               );
             })}
