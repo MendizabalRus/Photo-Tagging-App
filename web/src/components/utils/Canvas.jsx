@@ -47,6 +47,8 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
 
       onCharacterFound(result);
 
+      // if found true, render permanent circle on coords
+
       setClick({
         showModal: false,
         x: null,
@@ -102,6 +104,7 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
                   key={char.id}
                   name={char.name}
                   img={char.img}
+                  found={char.found}
                   onClick={() => handleGuess(char.id)}
                 />
               );

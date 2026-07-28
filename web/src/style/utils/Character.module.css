@@ -1,3 +1,23 @@
 .Character {
+    position: relative;
     border: var(--border);
+}
+
+.image {
+    opacity: 0.5;
+}
+
+.found {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    width: 70px;
+    height: 70px;
+
+    display: block;
+
+    background-color: rgba(0, 0, 0, 0.6);
+
+    z-index: 10;
 }
