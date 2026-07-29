@@ -12,9 +12,10 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { // Should change to Ranking and time should be added as a string
-  id       Int  @unique
-  username String @unique
+model Ranking {
+  id       Int    @id @default(autoincrement())
+  username String
+  time     Int
 }
 
 model Character {

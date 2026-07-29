@@ -8,19 +8,47 @@ import s from '../../style/utils/Canvas.module.css';
 import Character from './Character';
 
 import scenario from '../../public/assets/scenario.webp';
+import { useEffect } from 'react';
 
 const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
+  // useState hooks:
   const [click, setClick] = useState({
     showModal: false,
     x: null,
     y: null,
   });
   const [marks, setMarks] = useState([]);
-  const [username, setUsername] = useState("");
-  
-  /** useEffect(() => {
-   * fetch ranking data
-  }) */
+  const [username, setUsername] = useState('');
+  const [time, setTime] = useState(null);
+  const [ranking, setRanking] = useState([]);
+  // Game logic
+  // Record time when loading page
+  const startTime = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:8080/api/game-logic/start-time',
+        {
+          method: 'POST',
+          credentials: "include"
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Could not start time");
+      }
+
+      const result = await response.json();
+      console.log(result)
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    startTime();
+  }, []);
+
+  // Get user's clicks
 
   const handleClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect(); // Get coordinates of canvas.
@@ -34,26 +62,32 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
       : setClick({ showModal: true, x: x, y: y });
   };
 
+  // Check guesses
+
   const handleGuess = async (charId) => {
     try {
-      const response = await fetch('http://localhost:8080/api/guess', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'http://localhost:8080/api/game-logic/guess',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            x: click.x,
+            y: click.y,
+            id: charId,
+          }),
         },
-        body: JSON.stringify({
-          x: click.x,
-          y: click.y,
-          id: charId,
-        }),
-      });
+      );
 
       const result = await response.json();
-      console.log(result.centerX, result.centerY)
-      console.log(result.id)
+      console.log(result)
 
-      setMarks((prev) => [...prev, [result.centerX, result.centerY]])
+      setMarks((prev) => [...prev, [result.centerX, result.centerY]]);
       onCharacterFound(result.id);
+      setTime(result.timeDelta)
 
       setClick({
         showModal: false,
@@ -66,15 +100,32 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
     }
   };
 
+  // Register playthrough + show ranking
+
+  useEffect(() => {
+    const getRanking = async () => {
+      const response = await fetch("http://localhost:8080/api/game-logic/ranking", {
+        method: "GET",
+        credentials: "include",
+      })
+
+      const result = await response.json();
+      setRanking(result);
+    }
+
+    getRanking();
+  }, [])
+
+
   const handleSubmit = async () => {
-    /*
     try {
-        const response = await fetch("http://localhost:8080/api/register", {
+        const response = await fetch("http://localhost:8080/api/game-logic/register", {
           method: "POST",
           headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({username})
+            credentials: "include",
+            body: JSON.stringify({username, time})
         })
 
         const result = response.json();
@@ -83,11 +134,7 @@ const Canvas = ({ characters = [], onCharacterFound, isGameOver }) => {
     } catch (err) {
         console.error(err);
     }
-    */
-  }
-
-console.log(marks)
-console.log(click)
+  };
 
   return (
     <section className={s.Canvas} onClick={(e) => handleClick(e)}>
@@ -100,17 +147,23 @@ console.log(click)
                 type="text"
                 onChange={(e) => setUsername(e.target.value)}
               />
-              <button type='submit'>Register Score</button>
+              <button type="submit">Register Score</button>
             </form>
           </div>
           <div className={s.ranking}>
-            <p>#1 00:00.000s username1</p>
-            <p>#2 00:00.000s username2</p>
-            <p>#3 00:00.000s username3</p>
-            <p>#4 00:00.000s username4</p>
-            <p>#5 00:00.000s username5</p>
+            {ranking.map((r, index) => {
+              return (
+                <div key={r.id} className={s.rankingPlacement}>
+                  <p>#{index + 1}</p>
+                  <p>{r.username}</p>
+                  <p>{(r.time / 1000).toFixed(3)}s</p>
+                </div>
+              )
+            })}
             <hr />
-            <p>#yourTime 00:00.000s you</p>
+            <div className={s.rankingPlacement}>
+              <p>Your time: {(time / 100).toFixed(3)}s</p>
+            </div>
           </div>
         </div>
       )}
@@ -142,8 +195,16 @@ console.log(click)
       )}
       {marks.map((mark) => {
         return (
-            <div key={[mark[1], mark[0]]} style={{position: 'absolute', top: `${mark[1]}px`, left: `${mark[0]}px`}} className={s.crosshair}></div>
-        )
+          <div
+            key={[mark[1], mark[0]]}
+            style={{
+              position: 'absolute',
+              top: `${mark[1]}px`,
+              left: `${mark[0]}px`,
+            }}
+            className={s.crosshair}
+          ></div>
+        );
       })}
       <img src={scenario} alt="Scenario" className={s.scenario} />
     </section>

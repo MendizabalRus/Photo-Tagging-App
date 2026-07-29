@@ -14,9 +14,13 @@ const Home = () => {
 
   useEffect(() => {
     const getCharacters = async () => {
-      const response = await fetch('http://localhost:8080/api/characters', {
-        method: 'GET',
-      });
+      const response = await fetch(
+        'http://localhost:8080/api/game-logic/characters',
+        {
+          method: 'GET',
+          credentials: "include",
+        },
+      );
 
       const result = await response.json();
       const chars = result.map((char) => ({ ...char, found: false }));
